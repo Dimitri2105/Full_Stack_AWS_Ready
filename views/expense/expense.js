@@ -16,8 +16,11 @@ function saveToStorage(e) {
   let obj = { amountAdd, descriptionAdd, categoryAdd };
   console.log(obj)
 
+  const token = localStorage.getItem('token')
+
   axios
-    .post(`http://localhost:8000/add-expense`, obj)
+    .post(`http://localhost:8000/add-expense`,obj,
+    { headers: {"Authorization" : token }})
     .then((response) => {
       addItem(response.data.newExpense);
     })
@@ -56,9 +59,11 @@ function addItem(obj) {
     myForm.reset()
 }
 window.addEventListener("DOMContentLoaded",() =>{
-    console.log("inside DOM")
+    const token = localStorage.getItem('token')
+    console.log(token)
     axios
-    .get("http://localhost:8000/get-expenses")
+    .get("http://localhost:8000/get-expenses", 
+    { headers: {"Authorization" : token }})
     .then(response =>{
 
         const expenses = response.data.expense;
@@ -78,8 +83,12 @@ window.addEventListener("DOMContentLoaded",() =>{
 function deleteExpense(e, obj_id) {
     const deletedItem = e.target.parentElement;
     itemInput.removeChild(deletedItem);
+    
+    const token = localStorage.getItem('token')
+
     axios
-      .delete(`http://localhost:8000/delete-expense/${obj_id}`)
+      .delete(`http://localhost:8000/delete-expense/${obj_id}`,
+      { headers: {"Authorization" : token }})
       .then((response) => {
         console.log("inside axios delete function");
       })

@@ -1,10 +1,9 @@
 const Expense = require('../modals/expenseModal')
 const path = require('path')
 const rootDir = require('../util/path')
+const userAuthentication = require('../middleware/auth')
 
 exports.saveToStorage = async(req,res,next) =>{
-    console.log("inside  saveToStorage function")
-    console.log(req.body)
 
     const amount = req.body.amountAdd
     const description = req.body.descriptionAdd
@@ -18,7 +17,9 @@ exports.saveToStorage = async(req,res,next) =>{
         const data = await Expense.create(
             {   expenseAmount:amount,
                 description:description, 
-                category:category 
+                category:category,
+                userId:req.user.id
+
             });
         res.status(201).json({ newExpense: data })
       
@@ -30,7 +31,7 @@ exports.saveToStorage = async(req,res,next) =>{
 
 exports.getAllUsers = async(req,res,next) =>{
     try{
-        Expense.findAll()
+        Expense.findAll({where:{ userId : req.user.id }})
         .then(expense =>{
             res.status(201).json({expense})
         })
@@ -48,6 +49,7 @@ exports.deleteExpense = async(req,res,next) =>{
         res.status(400).json({err:"Missing ExpenseID"})
     }
     try{
+        console.log("Use id is >>>>>>>",req.user.id)
         const expenseId = req.params.id
         Expense.destroy({where:{id:expenseId}})
         console.log("expense Successfully destroyed")

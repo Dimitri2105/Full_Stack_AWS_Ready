@@ -1,6 +1,7 @@
 const path = require("path");
 const { where } = require("sequelize");
 const bcrypt = require("bcrypt");
+const jst = require("jsonwebtoken")
 
 const User = require("../modals/userModal");
 const rootDir = require("../util/path");
@@ -29,6 +30,12 @@ exports.signUp = async (req, res, next) => {
   }
 };
 
+function generateAccessToken(id){
+  return jst.sign(
+    {userId:id},
+    '80911864769882886476')
+}
+
 exports.logIn = async (req, res, next) => {
   const email = req.body.emailAdd;
   const password = req.body.passwordAdd;
@@ -42,7 +49,7 @@ exports.logIn = async (req, res, next) => {
     } else {
       bcrypt.compare(password, user.password, function (err, result) {
         if (result === true) {
-          res.status(200).json({ message: "User Login Succesfull" });
+          res.status(200).json({ message: "User Login Succesfull" ,token : generateAccessToken(user.id)});
         } else {
           res.status(400).json({ message: "User not authorized" });
         }
