@@ -3,11 +3,12 @@ let amountInput = document.querySelector("#amount");
 let descriptionInput = document.querySelector("#description");
 let categoryInput = document.querySelector("#category");
 let itemInput = document.querySelector("#users");
+let razorbtn = document.querySelector('#razorPaybtn')
 
 myForm.addEventListener("submit", saveToStorage);
 
 function saveToStorage(e) {
-    console.log('inside frontend')
+  console.log('inside frontend')
   e.preventDefault();
   let amountAdd = amountInput.value;
   let descriptionAdd = descriptionInput.value;
@@ -60,7 +61,6 @@ function addItem(obj) {
 }
 window.addEventListener("DOMContentLoaded",() =>{
     const token = localStorage.getItem('token')
-    console.log(token)
     axios
     .get("http://localhost:8000/get-expenses", 
     { headers: {"Authorization" : token }})
@@ -99,3 +99,35 @@ function deleteExpense(e, obj_id) {
       });
     myForm.reset();
   }
+
+razorbtn.onclick = async (e) =>{
+  const token = localStorage.getItem('token')
+  
+  const response= await axios.get(`http://localhost:8000/buyPremiumMembership`,{ headers: {"Authorization" : token }})
+  console.log(response)
+  var options = {
+    "key": response.data.key_id,
+    "order_id" : response.data.order.id,
+    "handler" : async (response) =>{
+      await axios.post(`http://localhost:8000/updateTransactionStatus`,
+      {order_id:options.order_id,
+       payment_id:response.razorpay_payment_id},
+      { headers: {"Authorization" : token }})
+
+      alert('You are Premium user now !!! ')
+
+    }}
+
+  const razor = new Razorpay (options)
+  razor.open()
+  e.preventDefault()
+
+  razor.on('payment.failed',(response) =>{
+    console.log(response)
+    alert('Transaction failed')
+
+  })
+
+
+
+}
