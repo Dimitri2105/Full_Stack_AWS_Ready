@@ -9,33 +9,20 @@ const User = require('../modals/userModal')
 
 exports.getUserLeaderboard = async(req,res,next) => {
     try{
-        const users = await User.findAll()
-        const expenses = await Expense.findAll()
+        const listOfleaderBoardInfo = await User.findAll( {
+            attributes : ["id","userName",[sequelize.fn('sum',sequelize.col('expenses.expenseAmount')),'totalExpense']],
+            include : [
+                {
+                    model:Expense,
+                    attributes : []
+                }
+            ],
+            group : ["user.id"],
+            order : [["totalExpense" , "DESC"]]
 
-        const userAggreatedExpenses = {}
-        
-        expenses.forEach(expense => {
-            if(userAggreatedExpenses[expense.userId]){
-
-                userAggreatedExpenses[expense.userId] = userAggreatedExpenses[expense.userId] +  expense.expenseAmount  
-            }
-            else{
-                userAggreatedExpenses[expense.userId] = expense.expenseAmount
-            }
-            
-        });
-        
-        let userLeaderBoardDetails = []
-
-        users.forEach(user =>{
-            userLeaderBoardDetails.push({name:user.userName , totalExpense : userAggreatedExpenses[user.id] || 0 })
         })
-
-        userLeaderBoardDetails.sort( (a,b) => {
-                b.totalExpense - a.totalExpense
-        })
-        console.log(userLeaderBoardDetails)
-        res.status(200).json(userLeaderBoardDetails)
+        console.log(listOfleaderBoardInfo)
+        res.status(200).json(listOfleaderBoardInfo)
 
     }catch (error) {
         console.log(error)

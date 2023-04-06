@@ -212,7 +212,7 @@ function showLeaderBoard() {
 
       const leaderboardName = document.createElement('div');
       leaderboardName.className = 'leaderboard-name';
-      leaderboardName.textContent = `${index + 1}. Name: ${user.name} Total Expense: ${user.totalExpense}`;
+      leaderboardName.textContent = `${index + 1}. Name: ${user.userName} Total Expense: ${user.totalExpense}`;
 
       leaderboardRow.appendChild(leaderboardName);
 
