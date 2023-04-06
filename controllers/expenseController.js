@@ -1,4 +1,5 @@
 const Expense = require('../modals/expenseModal')
+const User = require('../modals/userModal')
 const path = require('path')
 const rootDir = require('../util/path')
 const userAuthentication = require('../middleware/auth')
@@ -21,7 +22,18 @@ exports.saveToStorage = async(req,res,next) =>{
                 userId:req.user.id
 
             });
-        res.status(201).json({ newExpense: data })
+        console.log(data.expenseAmount)
+        const totalExpense = Number(req.user.totalExpenses) + Number(data.expenseAmount)
+        console.log(totalExpense)
+        await User.update( {totalExpenses:totalExpense} , {where:{id:req.user.id}},)
+        .then(() =>{
+            res.status(201).json({ newExpense: data ,totalExpense : totalExpense})
+        })
+        .catch(error =>{
+            console.log(error)
+            res.status(500).json({error:error})
+        })
+        // res.status(201).json({ newExpense: data })
       
       } catch (error) {
         console.log(error)
@@ -49,9 +61,9 @@ exports.deleteExpense = async(req,res,next) =>{
         res.status(400).json({err:"Missing ExpenseID"})
     }
     try{
-        console.log("Use id is >>>>>>>",req.user.id)
+        console.log("User id is >>>>>>>",req.user.id)
         const expenseId = req.params.id
-        Expense.destroy({where:{id:expenseId}})
+        Expense.destroy({where:{id:expenseId,userId:req.user.id}})
         console.log("expense Successfully destroyed")
 
     }catch{

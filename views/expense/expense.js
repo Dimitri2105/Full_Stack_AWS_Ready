@@ -50,7 +50,8 @@ function addItem(obj) {
   itemInput.append(li);
 
   let deletebtn = document.createElement("button");
-  deletebtn.className = "btn btn-outline-dark";
+  // deletebtn.className = "btn btn-outline-dark float-end";
+  deletebtn.className = "btn btn-dark float-end";
   deletebtn.appendChild(document.createTextNode("Delete Expense"));
   li.append(deletebtn);
 
@@ -153,21 +154,12 @@ razorbtn.onclick = async (e) => {
 };
 
 function premiumUserMessage(){
-  const premiumUserText = document.createElement("h3");
+  const premiumUserText = document.createElement("h4");
+  premiumUserText.className = "premiumUserMessage";
+  premiumUserText.textContent = "Welcome ... You're a Premium User !!!";
+  document.body.appendChild(premiumUserText);
 
-      premiumUserText.className = "form-label";
-      premiumUserText.style.fontFamily = "sans-Serif";
-      premiumUserText.style.fontWeight = "600;";
-      premiumUserText.style.textAlign = "center";
-      premiumUserText.style.color = "";
-
-      
-      premiumUserText.textContent = "Welcome ... You're a Premium User !!!";
-
-      document.body.appendChild(premiumUserText);
-      razorbtn.remove();
-
-
+  razorbtn.remove();
 }
 
 
@@ -185,10 +177,6 @@ function showLeaderBoard() {
   const leaderBoardbtn = document.createElement('button');
 
   leaderBoardbtn.className = "btn btn-success";
-  leaderBoardbtn.style.fontFamily = "sans-Serif";
-  leaderBoardbtn.style.fontWeight = "600";
-  leaderBoardbtn.style.display = "block";
-  leaderBoardbtn.style.margin = "0 auto";
   leaderBoardbtn.innerHTML = "Show LeaderBoard !!! ";
 
   leaderBoardbtn.onclick  = async() =>{
@@ -212,7 +200,7 @@ function showLeaderBoard() {
 
       const leaderboardName = document.createElement('div');
       leaderboardName.className = 'leaderboard-name';
-      leaderboardName.textContent = `${index + 1}. Name: ${user.userName} Total Expense: ${user.totalExpense}`;
+      leaderboardName.textContent = `${index + 1}. Name: ${user.userName} Total Expense: ${user.totalExpenses}`;
 
       leaderboardRow.appendChild(leaderboardName);
 
