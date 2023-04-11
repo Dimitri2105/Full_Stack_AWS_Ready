@@ -71,6 +71,7 @@ window.addEventListener("DOMContentLoaded", () => {
   if(premiumUser){
     premiumUserMessage()
     showLeaderBoard()
+    downloadExpense()
     // razorbtn.remove();
   }
   axios
@@ -122,8 +123,6 @@ razorbtn.onclick = async (e) => {
   );
   console.log(response);
 
-  
-
   var options = {
     "key": response.data.key_id,
     "order_id": response.data.order.id,
@@ -140,6 +139,7 @@ razorbtn.onclick = async (e) => {
       alert("You are Premium user now !!! ");
       premiumUserMessage()
       showLeaderBoard()
+      downloadExpense()
     },
   };
 
@@ -176,8 +176,8 @@ function parseJwt (token) {
 function showLeaderBoard() {
   const leaderBoardbtn = document.createElement('button');
 
-  leaderBoardbtn.className = "btn btn-success";
-  leaderBoardbtn.innerHTML = "Show LeaderBoard !!! ";
+  leaderBoardbtn.className = "btn btn-success ";
+  leaderBoardbtn.innerHTML = "Show LeaderBoard";
 
   leaderBoardbtn.onclick  = async() =>{
 
@@ -211,4 +211,22 @@ function showLeaderBoard() {
 
   document.body.appendChild(leaderBoardbtn);
 }
+
+function downloadExpense(){
+
+  const downloadExpensebtn = document.createElement('button');
+
+  downloadExpensebtn.className = "btn btn-success";
+  downloadExpensebtn.id="downloadexpense"
+  downloadExpensebtn.innerHTML = "Download";
+
+  downloadExpensebtn.onclick = () => {
+    download();
+  };
   
+  document.body.appendChild(downloadExpensebtn)
+}
+
+function download(){
+  console.log("Inside download function of downloadExpensebtn>>>>>>>>> ")
+}
