@@ -17,6 +17,7 @@ const User = require('./modals/userModal')
 const Expense = require('./modals/expenseModal')
 const Order = require('./modals/orderModal')
 const Forgotpassword = require('./modals/forgetPasswordModal');
+const DownloadUrl = require('./modals/fileURL')
 
 const app = express()
 
@@ -41,6 +42,9 @@ Order.belongsTo(User)
 
 User.hasMany(Forgotpassword)
 Forgotpassword.belongsTo(User)
+
+User.hasMany(DownloadUrl)
+DownloadUrl.belongsTo(User)
 
 sequelize
 .sync()

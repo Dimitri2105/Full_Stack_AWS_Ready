@@ -72,6 +72,7 @@ window.addEventListener("DOMContentLoaded", () => {
     premiumUserMessage()
     showLeaderBoard()
     downloadExpense()
+    downloadURLHistory()
     // razorbtn.remove();
   }
   axios
@@ -140,6 +141,7 @@ razorbtn.onclick = async (e) => {
       premiumUserMessage()
       showLeaderBoard()
       downloadExpense()
+      downloadURLHistory()
     },
   };
 
@@ -222,11 +224,67 @@ function downloadExpense(){
 
   downloadExpensebtn.onclick = () => {
     download();
-  };
-  
+  }
   document.body.appendChild(downloadExpensebtn)
 }
 
-function download(){
-  console.log("Inside download function of downloadExpensebtn>>>>>>>>> ")
+async function download(){
+  try{
+    const token = localStorage.getItem('token')
+    const downloadInfo = await axios.get(`http://localhost:8000/user/download`,{ headers: { Authorization: token } });
+    console.log(downloadInfo)
+    var a = document.createElement("a");
+    a.href = downloadInfo.data.fileURL;
+    a.download = 'myexpense.csv';
+    a.click();
+
+  }catch(error){
+    console.log(error)
+    document.body.innerHTML = document.body.innerHTML + "<h3> Something Went Wrong </h3>";
+
+  }
 }
+
+function downloadURLHistory(){
+
+  const downloadURLbtn = document.createElement('button');
+
+  downloadURLbtn.className = "btn btn-success";
+  downloadURLbtn.id="downloadURL"
+  downloadURLbtn.innerHTML = "Show File History";
+
+  downloadURLbtn.onclick  = async() =>{
+
+    const token = localStorage.getItem("token");
+    const urlHistory = await axios.get(`http://localhost:8000/user/getURL`,{ headers: { Authorization: token } });
+    console.log(urlHistory)
+
+    const urlHistoryContainer = document.createElement('div');
+    urlHistoryContainer.className = 'urlHistory-container';
+
+    const urlHistoryTitle = document.createElement('h3');
+    urlHistoryTitle.className = 'urlHistoryTitle-title';
+    urlHistoryTitle.textContent = 'File Download History';
+
+    urlHistoryContainer.appendChild(urlHistoryTitle);
+
+    urlHistory.data.allURL.forEach((data, index) => {
+      const urlHistoryRow = document.createElement('div');
+      urlHistoryRow.className = 'urlHistory-row';
+
+      const urlHistoryName = document.createElement('div');
+      urlHistoryName.className = 'urlHistory-name';
+    
+      // urlHistoryName.textContent = `${index + 1} File: ${data.filename.slice(0,9)} URL: ${data.fileURL.split('.')[0]}`;
+      urlHistoryName.textContent = `${index + 1} File: ${data.filename} URL: ${data.fileURL}`;
+
+      urlHistoryRow.appendChild(urlHistoryName);
+
+      urlHistoryContainer.appendChild(urlHistoryName);
+    });
+    document.body.appendChild(urlHistoryContainer);
+  }  
+
+  document.body.appendChild(downloadURLbtn)
+}
+
