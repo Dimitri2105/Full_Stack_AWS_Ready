@@ -17,6 +17,8 @@ const { RequestContactExportCustomContactFilter } = require("sib-api-v3-sdk");
 
 dotenv.config();
 
+dotenv.config()
+
 exports.forgetPassword = async (req, res, next) => {
   try {
     sgMail.setApiKey(process.env.API_KEY);
@@ -97,8 +99,8 @@ exports.updatePassword = async(req,res,next) =>{
           console.log(error);
           throw new Error(error);
         }
-      await User.update({password: hash},{where:{id:userRequest.id}})
-      res.status(201).json({message: 'Successfuly update the new password'})})
+    await User.update({password: hash},{where:{id:userRequest.id}})
+    res.status(201).json({message: 'Successfuly update the new password'})})
     }
   }
   catch (error) {

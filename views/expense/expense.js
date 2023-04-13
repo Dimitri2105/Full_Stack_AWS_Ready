@@ -68,7 +68,6 @@ window.addEventListener("DOMContentLoaded", () => {
   const token = localStorage.getItem("token");
 
   const decodeToken = parseJwt(token);
-  console.log(decodeToken);
   const premiumUser = decodeToken.isPremiumUser;
 
   if (premiumUser) {
@@ -86,7 +85,6 @@ window.addEventListener("DOMContentLoaded", () => {
       headers: { Authorization: token },
     })
     .then((response) => {
-      console.log(response)
       const expenses = response.data.expenses;
 
       for (let i = 0; i < expenses.length; i++) {
@@ -356,7 +354,6 @@ function getPageExpenses(page) {
       headers: { Authorization: token },
     })
     .then((response) => {
-      console.log(response)
       clearItems()
       const expenses = response.data.expenses;
 
@@ -385,7 +382,6 @@ function clearItems() {
   itemInput.innerHTML = '';
 }
 function loadItemsPerPage() {
-  const itemsPerPageInput = document.querySelector('#items-per-page');
   const itemsPerPage = localStorage.getItem('itemsPerPage');
   if (itemsPerPage) {
     itemsPerPageInput.value = itemsPerPage;

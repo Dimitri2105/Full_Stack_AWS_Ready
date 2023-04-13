@@ -1,8 +1,13 @@
 const express = require('express')
 
 const path = require('path')
+const fs = require('fs')
 const bodyParser = require('body-parser')
 var cors = require('cors')
+const helmet = require('helmet')
+const dotenv = require('dotenv')
+const morgan = require('morgan')
+dotenv.config()
 
 const sequelize = require('./database/database')
 const rootDir = require('./util/path')
@@ -26,7 +31,10 @@ app.use(bodyParser.urlencoded({extended:true}))
 
 app.use(express.static(path.join(__dirname, 'public')));
 
+const logStream = fs.createWriteStream(path.join(__dirname,'access.log'), { flags : 'a'})
 app.use(cors())
+app.use(helmet())
+app.use(morgan('combined',{ stream : logStream}))
 
 app.use(userRoute)
 app.use(forgetPasswordRoute)
@@ -49,7 +57,7 @@ DownloadUrl.belongsTo(User)
 sequelize
 .sync()
 .then( result =>{
-    app.listen(8000,() =>{
+    app.listen(process.env.PORT || 8000 , () =>{
         console.log('Server listening on port 8000')
     })
 
