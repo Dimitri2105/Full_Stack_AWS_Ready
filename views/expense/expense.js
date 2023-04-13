@@ -5,6 +5,8 @@ let categoryInput = document.querySelector("#category");
 let itemInput = document.querySelector("#users");
 let razorbtn = document.querySelector("#razorPaybtn");
 let pagination = document.querySelector(".pagination")
+let itemsPerPageInput = document.querySelector('#items-per-page')
+
 
 myForm.addEventListener("submit", saveToStorage);
 
@@ -77,7 +79,8 @@ window.addEventListener("DOMContentLoaded", () => {
     // razorbtn.remove();
   }
   const page =1
-  const Items_Per_Page = 2
+  const Items_Per_Page = localStorage.getItem('itemsPerPage') || 2;
+  
   axios
     .get(`http://localhost:8000/get-expenses/${page}?limit=${Items_Per_Page}`, {
       headers: { Authorization: token },
@@ -343,8 +346,11 @@ function showPagination({ currentPage, hasNextPage, hasPreviousPage, nextPage, p
 }
 
 function getPageExpenses(page) {
-  const Items_Per_Page =  2
+
+  
   const token = localStorage.getItem('token')
+  const Items_Per_Page = parseInt(itemsPerPageInput.value) || 2
+  localStorage.setItem('itemsPerPage',Items_Per_Page)
   axios
     .get(`http://localhost:8000/get-expenses/${page}?limit=${Items_Per_Page}`, {
       headers: { Authorization: token },
@@ -378,3 +384,11 @@ function getPageExpenses(page) {
 function clearItems() {
   itemInput.innerHTML = '';
 }
+function loadItemsPerPage() {
+  const itemsPerPageInput = document.querySelector('#items-per-page');
+  const itemsPerPage = localStorage.getItem('itemsPerPage');
+  if (itemsPerPage) {
+    itemsPerPageInput.value = itemsPerPage;
+  }
+}
+
