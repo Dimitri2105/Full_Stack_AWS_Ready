@@ -52,10 +52,30 @@ exports.saveToStorage = async (req, res, next) => {
 };
 
 exports.getAllUsers = async (req, res, next) => {
+  const page = req.params.id
+  const Items_Per_Page = parseInt(req.query.limit || 2);
   try {
-    Expense.findAll({ where: { userId: req.user.id } }).then((expense) => {
-      res.status(201).json({ expense });
-    });
+    let count = await Expense.count({where: { userId: req.user.id}})
+
+    const expenses = await Expense.findAll({
+      where: { userId: req.user.id },
+      offset: (page-1)*Items_Per_Page,
+      limit: Items_Per_Page
+    })  
+    res.status(200).json({
+      expenses,
+      info: {
+          currentPage: page,
+          hasNextPage: count > page * Items_Per_Page,
+          hasPreviousPage: page > 1,
+          nextPage: +page + 1,
+          previuosPage: +page - 1,
+          lastPage: Math.ceil(count / Items_Per_Page) 
+      }
+  });
+    // Expense.findAll({ where: { userId: req.user.id } }).then((expense) => {
+    // res.status(201).json({ expense });
+    // });
   } catch (error) {
     console.log(error);
     res.status(500).json({ error: error });
