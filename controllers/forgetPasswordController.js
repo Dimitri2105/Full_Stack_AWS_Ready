@@ -17,8 +17,6 @@ const { RequestContactExportCustomContactFilter } = require("sib-api-v3-sdk");
 
 dotenv.config();
 
-dotenv.config()
-
 exports.forgetPassword = async (req, res, next) => {
   try {
     sgMail.setApiKey(process.env.API_KEY);
@@ -40,7 +38,7 @@ exports.forgetPassword = async (req, res, next) => {
       from: "karanthakur577@gmail.com",
       subject: "Password Reset",
       text: "Click on below link to reset password",
-      html: `<a href="http://localhost:8000/password/resetpassword/${id}">Reset password</a>`,
+      html: `<a href="http://localhost:8000 /password/resetpassword/${id}">Reset password</a>`,
     };
     const result = await sgMail.send(message);
     console.log("id >>>>>>>>",id)

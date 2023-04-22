@@ -15,6 +15,7 @@ function saveToStorage(e) {
     console.log(obj)
 
     axios
+    // .post(`http://localhost:8000 /user/logIn`, obj)
     .post(`http://localhost:8000/user/logIn`, obj)
     .then(response =>{
         console.log(response.data.token)

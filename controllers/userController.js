@@ -6,7 +6,10 @@ const jst = require("jsonwebtoken")
 const User = require("../modals/userModal");
 const rootDir = require("../util/path");
 
-exports.signUp = async (req, res, next) => {
+const dotenv = require('dotenv')
+dotenv.config()
+
+const signUp = async (req, res, next) => {
   const userName = req.body.userAdd;
   const emailAdd = req.body.emailAdd;
   const passwordAdd = req.body.passwordAdd;
@@ -30,15 +33,16 @@ exports.signUp = async (req, res, next) => {
   }
 };
 
-function generateAccessToken(id){
+const  generateAccessToken = function(id,userName,isPremiumUser){
   return jst.sign(
-    {userId:id},
-    '80911864769882886476')
+    {userId:id ,name:userName,isPremiumUser},
+    process.env.TOKEN_SECRET)
 }
 
-exports.logIn = async (req, res, next) => {
+const logIn = async (req, res, next) => {
   const email = req.body.emailAdd;
   const password = req.body.passwordAdd;
+
 
   try {
     const user = await User.findOne({
@@ -49,7 +53,7 @@ exports.logIn = async (req, res, next) => {
     } else {
       bcrypt.compare(password, user.password, function (err, result) {
         if (result === true) {
-          res.status(200).json({ message: "User Login Succesfull" ,token : generateAccessToken(user.id)});
+          res.status(200).json({ message: "User Login Succesfull" ,token : generateAccessToken(user.id,user.userName,user.isPremiumUser)});
         } else {
           res.status(400).json({ message: "User not authorized" });
         }
@@ -60,3 +64,9 @@ exports.logIn = async (req, res, next) => {
     res.status(500).json({ error: error });
   }
 };
+
+module.exports = {
+  logIn,
+  signUp,
+  generateAccessToken
+}

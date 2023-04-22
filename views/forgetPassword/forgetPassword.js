@@ -10,11 +10,13 @@ function saveToStorage(e) {
     let obj = {emailAdd}
     const token = localStorage.getItem("token");
     axios
-    .post(`http://localhost:8000/password/forgotpassword`, obj,{ headers: { Authorization: token } })
+    .post(`http://localhost:8000/password/forgotpassword`, obj)
+
+    // .post(`http://localhost:8000 /password/forgotpassword`, obj,{ headers: { Authorization: token } })
     .then(response =>{
         console.log(response.data)
         // localStorage.setItem('token',response.data.token)
-        // window.location.href="file:///C:/Users/karan/Documents/Gettin%20Started/Node_Js_To-Do-Project/views/expense/expense.html"
+        // window.location.href="file:///C:/Users/karan/Documents/Gettin%20Started/Node_Js_To-Do-Project/views/resetPassword/resetPassword.html"
     })
     .catch((error) => {
         document.body.innerHTML =

@@ -10,18 +10,17 @@ const User = require('../modals/userModal')
 exports.getUserLeaderboard = async(req,res,next) => {
     try{
         const listOfleaderBoardInfo = await User.findAll( {
-            attributes : ["id","userName",[sequelize.fn('sum',sequelize.col('expenses.expenseAmount')),'totalExpense']],
-            include : [
-                {
-                    model:Expense,
-                    attributes : []
-                }
-            ],
-            group : ["user.id"],
-            order : [["totalExpense" , "DESC"]]
+            // attributes : ["id","userName",[sequelize.fn('sum',sequelize.col('expenses.expenseAmount')),'totalExpense']],
+            // include : [
+            //     {
+            //         model:Expense,
+            //         attributes : []
+            //     }
+            // ],
+            // group : ["user.id"],
+            order : [["totalExpenses" , "DESC"]]
 
         })
-        console.log(listOfleaderBoardInfo)
         res.status(200).json(listOfleaderBoardInfo)
 
     }catch (error) {

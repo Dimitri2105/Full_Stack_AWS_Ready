@@ -8,6 +8,9 @@ const userAuthentication = require("../middleware/auth");
 const UserServices = require('../services/userServices')
 const S3Services = require('../services/s3Services')
 const AWS = require("aws-sdk");
+const dotenv = require("dotenv");
+
+dotenv.config()
 
 exports.saveToStorage = async (req, res, next) => {
   const amount = req.body.amountAdd;
@@ -78,7 +81,7 @@ exports.getAllUsers = async (req, res, next) => {
     // });
   } catch (error) {
     console.log(error);
-    res.status(500).json({ error: error });
+    res.status(500).json({ error: "Something went wrong" });
   }
 };
 
@@ -110,7 +113,7 @@ exports.deleteExpense = async (req, res, next) => {
   } catch (error) {
     await t.rollback();
     console.log(error);
-    res.status(500).json({ error: error });
+    res.status(500).json({ error: "Something went wrong" });
   }
 };
 
@@ -130,7 +133,6 @@ exports.downloadExpense = async (req, res, next) => {
           filename,
           userId: req.user.id,
         });
-    console.log("downloadUrlData >>>>>>>>>>>", downloadUrlData);
     res.status(200).json({ fileURL,downloadUrlData,success: true });
   } catch (error) {
     console.log(error);
@@ -140,12 +142,11 @@ exports.downloadExpense = async (req, res, next) => {
 exports.downloadAllUrl = async(req,res,next) =>{
     try{
         const allURL = await DownloadUrl.findAll({where:{userID:req.user.id}})
-        console.log("allURL>>>>>>>>>>>>>>>>>>>>>",allURL)
         res.status(200).json({allURL})
 
     }catch (error) {
         console.log(error);
-        res.status(500).json({error: error, success: false });
+        res.status(500).json({error: "Something went wrong", success: false });
 
     }
 

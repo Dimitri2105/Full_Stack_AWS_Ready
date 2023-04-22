@@ -15,14 +15,9 @@ dotenv.config()
 
 
 exports.premiumMember = async (req, res, next) => {
-  console.log("INSIDE PURCHASE CONTROLLER premiumMember ");
-
   try {
     const razorPayKeyId = process.env.RAZORPAY_KEY_ID
-    console.log(razorPayKeyId)
     const razorPayKeySecret = process.env.RAZORPAY_KEY_SECRET 
-    console.log(razorPayKeySecret)
-    console.log(process.env)
     var rzr = new Razorpay({
       key_id: razorPayKeyId,
       key_secret: razorPayKeySecret
@@ -53,6 +48,7 @@ exports.updateStatus = async (req, res, next) => {
   try {
     const order_id = req.body.order_id;
     const payment_id = req.body.payment_id;
+    const userId = req.user.id
 
     const order = await Order.findOne({ where: { orderId: order_id } })
       
@@ -61,7 +57,7 @@ exports.updateStatus = async (req, res, next) => {
 
     Promise.all([promise1,promise2])
     .then( () =>{
-        return res.status(200).json({ message: "Transaction Succesfull"});
+        return res.status(200).json({ message: "Transaction Succesfull" , token : userController.generateAccessToken(userId , undefined , true)});
     })
     .catch(async (error) => {
         console.log(error);

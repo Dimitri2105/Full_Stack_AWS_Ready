@@ -11,14 +11,12 @@ let itemsPerPageInput = document.querySelector('#items-per-page')
 myForm.addEventListener("submit", saveToStorage);
 
 function saveToStorage(e) {
-  console.log("inside frontend");
   e.preventDefault();
   let amountAdd = amountInput.value;
   let descriptionAdd = descriptionInput.value;
   let categoryAdd = categoryInput.value;
 
   let obj = { amountAdd, descriptionAdd, categoryAdd };
-  console.log(obj);
 
   const token = localStorage.getItem("token");
 
@@ -141,8 +139,9 @@ razorbtn.onclick = async (e) => {
         },
         { headers: { Authorization: token } }
       );
-
+      console.log(res)
       alert("You are Premium user now !!! ");
+      localStorage.setItem('token' , res.data.token)
       premiumUserMessage();
       showLeaderBoard();
       downloadExpense();
@@ -191,15 +190,21 @@ function showLeaderBoard() {
   leaderBoardbtn.className = "btn btn-success ";
   leaderBoardbtn.innerHTML = "Show LeaderBoard";
 
+  let leaderboardContainer = null
+
   leaderBoardbtn.onclick = async () => {
-    const token = localStorage.getItem("token");
+    if (leaderboardContainer){
+      leaderboardContainer.remove()
+      leaderboardContainer = null
+    }
+    else{
+      const token = localStorage.getItem("token");
     const userLeaderBoard = await axios.get(
       `http://localhost:8000/premium/leaderBoard`,
       { headers: { Authorization: token } }
     );
-    console.log(userLeaderBoard);
 
-    const leaderboardContainer = document.createElement("div");
+    leaderboardContainer = document.createElement("div");
     leaderboardContainer.className = "leaderboard-container";
 
     const leaderboardTitle = document.createElement("h3");
@@ -224,7 +229,7 @@ function showLeaderBoard() {
     });
     document.body.appendChild(leaderboardContainer);
   };
-
+  }
   document.body.appendChild(leaderBoardbtn);
 }
 
@@ -248,7 +253,6 @@ async function download() {
       `http://localhost:8000/user/download`,
       { headers: { Authorization: token } }
     );
-    console.log(downloadInfo);
     var a = document.createElement("a");
     a.href = downloadInfo.data.fileURL;
     a.download = "myexpense.csv";
@@ -267,14 +271,19 @@ function downloadURLHistory() {
   downloadURLbtn.id = "downloadURL";
   downloadURLbtn.innerHTML = "Show File History";
 
+  let urlHistoryContainer = null
+
   downloadURLbtn.onclick = async () => {
-    const token = localStorage.getItem("token");
+    if (urlHistoryContainer){
+      urlHistoryContainer.remove()
+      urlHistoryContainer = null
+    }else{
+      const token = localStorage.getItem("token");
     const urlHistory = await axios.get(`http://localhost:8000/user/getURL`, {
       headers: { Authorization: token },
     });
-    console.log(urlHistory);
 
-    const urlHistoryContainer = document.createElement("div");
+    urlHistoryContainer = document.createElement("div");
     urlHistoryContainer.className = "urlHistory-container";
 
     const urlHistoryTitle = document.createElement("h3");
@@ -297,8 +306,8 @@ function downloadURLHistory() {
       urlHistoryContainer.appendChild(urlHistoryName);
     });
     document.body.appendChild(urlHistoryContainer);
+    }
   };
-
   document.body.appendChild(downloadURLbtn);
 }
 
@@ -380,11 +389,5 @@ function getPageExpenses(page) {
 
 function clearItems() {
   itemInput.innerHTML = '';
-}
-function loadItemsPerPage() {
-  const itemsPerPage = localStorage.getItem('itemsPerPage');
-  if (itemsPerPage) {
-    itemsPerPageInput.value = itemsPerPage;
-  }
 }
 
