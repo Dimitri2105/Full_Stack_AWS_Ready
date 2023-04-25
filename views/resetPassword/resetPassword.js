@@ -15,6 +15,8 @@ function saveToStorage(e) {
     .post(`http://localhost:8000 /password/updatepassword${resetID}`,obj,)
     .then(response =>{
         console.log(response.data)
+        // window.location.href="../login/logIn.html"
+
         // localStorage.setItem('token',response.data.token)
         // window.location.href="file:///C:/Users/karan/Documents/Gettin%20Started/Node_Js_To-Do-Project/views/expense/expense.html"
     })

@@ -15,12 +15,12 @@ function saveToStorage(e) {
     console.log(obj)
 
     axios
-    // .post(`http://localhost:8000 /user/logIn`, obj)
     .post(`http://localhost:8000/user/logIn`, obj)
+    // .post(`http://localhost:8000/user/logIn`, obj)
     .then(response =>{
         console.log(response.data.token)
         localStorage.setItem('token',response.data.token)
-        window.location.href="file:///C:/Users/karan/Documents/Gettin%20Started/Node_Js_To-Do-Project/views/expense/expense.html"
+        window.location.href="../expense/expense.html"
     })
     .catch((error) => {
         document.body.innerHTML =
