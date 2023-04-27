@@ -33,7 +33,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 const logStream = fs.createWriteStream(path.join(__dirname,'access.log'), { flags : 'a'})
 app.use(cors());
-app.use(helmet())
+// app.use(helmet())
 app.use(
     helmet.contentSecurityPolicy({
       directives: {
@@ -58,6 +58,7 @@ app.use(premiumRoute)
 app.use((req,res,next) =>{
     // console.log('URL IS >>>>>>>>' , req.url)
     // console.log('FILE PATH IS >>>>>>>>' , path.join(__dirname , `views/${req.url}`))
+    console.log("Automation")
     res.sendFile(path.join(__dirname , `views/${req.url}`))
 })
 
